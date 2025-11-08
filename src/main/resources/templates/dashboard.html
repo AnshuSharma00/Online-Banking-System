@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏦 Online Banking Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6dd5fa, #2980b9);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            /* Nice blur effect for modern browsers + Safari support */
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #27ae60;
+            color: white;
+            display: block;
+        }
+
+        .message.error {
+            background-color: #e74c3c;
+            color: white;
+            display: block;
+        }
+
+        .balance {
+            background: #2ecc71;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 10px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .transactions {
+            margin-top: 25px;
+        }
+
+        .transactions h3 {
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: #ecf0f1;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        li:hover {
+            background: #dfe6e9;
+        }
+
+        .actions {
+            margin-top: 30px;
+        }
+
+        .actions h3 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+
+        form {
+            margin-bottom: 10px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .logout-btn {
+            background-color: #e74c3c;
+            margin-top: 20px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🏦 Welcome, <span th:text="${username}"></span>!</h2>
+
+        <!-- ✅ Message Section -->
+        <div th:if="${message}" 
+             th:classappend="${message.startsWith('✅') || message.startsWith('💸') ? 'message success' : 'message error'}" 
+             th:text="${message}">
+        </div>
+
+        <!-- ✅ Balance Display -->
+        <div class="balance">
+            💰 Current Balance: ₹<span th:text="${balance}"></span>
+        </div>
+
+        <!-- ✅ Transactions List -->
+        <div class="transactions">
+            <h3>🧾 Recent Transactions</h3>
+            <ul>
+                <li th:each="txn : ${transactions}" th:text="${txn}"></li>
+            </ul>
+        </div>
+
+        <!-- ✅ Deposit & Withdraw Forms -->
+        <div class="actions">
+            <h3>💸 Quick Actions</h3>
+
+            <form th:action="@{/deposit}" method="post">
+                <input type="number" name="amount" placeholder="Enter deposit amount" required step="0.01">
+                <button type="submit">Deposit</button>
+            </form>
+
+            <form th:action="@{/withdraw}" method="post">
+                <input type="number" name="amount" placeholder="Enter withdrawal amount" required step="0.01">
+                <button type="submit">Withdraw</button>
+            </form>
+        </div>
+
+        <!-- ✅ Logout -->
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+</body>
+</html>
